@@ -1,3 +1,3 @@
 import { userSchema } from "./userSchema.js";
-
-export { userSchema };
+import { companySchema } from "./companySchema.js";
+export { userSchema, companySchema };

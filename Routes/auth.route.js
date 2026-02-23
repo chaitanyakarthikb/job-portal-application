@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import { userSchema } from '../db/userSchema.js';
 import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
-import { loginReqBodyValidator } from '../middleware/loginReqBodyValidator.middleware.js';
 const authRouter = express.Router();
 
 authRouter.post('/signup', signupReqBodyValidator, async (req, res) => {
@@ -40,12 +39,14 @@ authRouter.post('/signup', signupReqBodyValidator, async (req, res) => {
 })
 
 
-authRouter.post('/login', loginReqBodyValidator, async (req, res) => {
+authRouter.post('/login', async (req, res) => {
+
 
     let { email, password } = req.body;
     let user = await db.select().from(userSchema).where(eq(userSchema.email, email));
 
-    if (!user) {
+
+    if (user.length === 0) {
         return res.status(400).send("User not found!");
     }
 
