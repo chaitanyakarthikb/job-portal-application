@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 import { adminLoginReqBodyValidator } from '../middleware/adminLoginReqBodyValidator.middleware.js';
 import { checkForExistingAdmin, checkForExistingCompanyByEmail, checkForExistingUserByEmail, getCompanyByEmail, insertIntoCompany, insertIntoUser } from '../services/adminSignupAndLogin/index.js';
 
-export const adminSignUpRouter = express.Router();
+export const adminAuthRouter = express.Router();
 
 
-adminSignUpRouter.post('/signup', async (req, res) => {
+adminAuthRouter.post('/signup', async (req, res) => {
     const { admin, company } = req.body;
 
     let existingCompany = await checkForExistingCompanyByEmail(company.email);
@@ -41,7 +41,7 @@ adminSignUpRouter.post('/signup', async (req, res) => {
     return res.send("Admin signup successful")
 })
 
-adminSignUpRouter.post('/login', adminLoginReqBodyValidator, async (req, res) => {
+adminAuthRouter.post('/login', adminLoginReqBodyValidator, async (req, res) => {
     const { email, password, companyEmail } = req.body;
 
     let checkForExistingCompany = await checkForExistingCompanyByEmail(companyEmail);
@@ -69,6 +69,7 @@ adminSignUpRouter.post('/login', adminLoginReqBodyValidator, async (req, res) =>
         last_name: checkFrExistingAdmin[0].last_name,
         email: checkFrExistingAdmin[0].email,
         role: checkFrExistingAdmin[0].role,
+        company_id: checkFrExistingAdmin[0].company_id,
     }
 
     let secretKey = process.env.SECRET_KEY;
